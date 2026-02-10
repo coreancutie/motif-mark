@@ -2,20 +2,13 @@
 
 Here are a list of classes:
 
-- Sequence 
-    - This class will assign the sequence (seperate them from the FASTA header). 
+- FASTAParcer
+    - This class will parse through the FASTA file
+    - This class will then assign the headers and the sequences within the file
 
-- Intron 1 
-    - This class will assign the chunk of the sequence that is the first intron. 
+- Sequence
+    - This class will assign the chunk of the sequence that is the introns and exon
 
-- Intron 2  
-    - This class will assign the chunk of the sequence that is the second intron. 
-
-- Exon 
-    - This class will assign the chunk of the sequence that is the exon. 
-
-- Motif 1 
-    - This class will assign the chunk of sequence to the first motif. 
-
-- Motif 2 
-    - This class will assign the chunk of sequence to the second motif. 
+- Motif 
+    - This class will parse through the sequences
+    - Then assign the chunk of sequence that is a motif 
