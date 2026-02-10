@@ -1,5 +1,7 @@
 # motif-mark
 
+This script is identifying motifs in pre-mRNA and outputing a visual of a sequence and where all the motifs are located using object oriented programing (OOP). 
+
 The goal:
 
 - Given pre-mRNA sequences in a FASTA file, output a visual that show where motifs are along certain chunks of DNA that are structured: intron-exon-intron 
@@ -29,3 +31,5 @@ Other notes:
 - Could output some stats along with the figure
     - how many motifs were in each sequence 
     - how many of each motif were found throughout the entire FASTA file
+- Use CamelCase for your class names. EX `BioformaticsLover`
+- Use underscore / "snake_case" style for your objects. EX `my_happy_bioinformatics_student`
