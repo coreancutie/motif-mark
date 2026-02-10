@@ -12,6 +12,8 @@ The Input:
 - A motif file
     - Each line is one motif sequence
 
+The Output
+- One image (png, pdf, svg, jpg, etc.)
 
 Other notes:
 
@@ -23,6 +25,7 @@ Other notes:
 - The motifs will have ambigutary such as `YGCY` where the `Y` is either a `C` or a `T`. A sequence of `CGCC` `TGCT` `TGCC` and `CGCT` are all under that one motif. 
 - If two motifs overlap you can set the bars to be transparent or have the bars be offset
 - If there is a `U` in a motif look for both `T` and `U`
-
-Other notes: 
+- Have one key for the entire figure
 - Could output some stats along with the figure
+    - how many motifs were in each sequence 
+    - how many of each motif were found throughout the entire FASTA file
