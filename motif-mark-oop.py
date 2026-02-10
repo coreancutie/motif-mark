@@ -56,3 +56,9 @@ def oneline_fasta(input_file:str, output_file:str):
                     seq_line += line
             #the last case to write the last sequence
             f.write(seq_line)
+
+#making the input file FASTA have one line sequence
+oneline_fasta(f, f"oneline_{f}")
+
+#defining the classes ------------------------------------------------------------------------------------
+class Sequence:
