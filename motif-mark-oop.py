@@ -61,4 +61,13 @@ def oneline_fasta(input_file:str, output_file:str):
 oneline_fasta(f, f"oneline_{f}")
 
 #defining the classes ------------------------------------------------------------------------------------
-class Sequence:
+
+class Sequence():
+    #this class is for each sequence in a FASTA
+    def __init__(self, length, exon_list):
+        #this is the overall total length of the sequence
+        self.length = length
+        #this is a list that holds start and end values for each exon in the sequence
+        #example of an exon 25bp long: [(25, 50)]
+        #example of 2 exons in a sequence: [(10, 30), (80,95)]
+        self.exon_list = exon_list
