@@ -89,16 +89,27 @@ class Motif():
         self.motif = motif
 
     #make a function that gets all of the motif optioins
+    #RETURN THE REGEX EXPRESSION FOR THE MOTIF
+    #y can be c or t
 
 
 #getting the information  -------------------------------------------------------------------------------
 
 #writing pseudocode
 
+#go through the motif txt file
+#make a list (maybe a set....?) of all the motifs (similar to making a set of the UMI in deduper)
+
+#go through each of the motifs and assign it to a motif class
+#the class will return the regex expression used to search for all possible options for that motif
+
 #go through the FASTA one line at a time
 #get the header and save it for title use for the picture
 #make the sequence one line/one string with no new line characters
 #get the sequence length!
 #get the start and end position of all the exons as a list (make a function?)
+    #used regex because uppercase wooo1
 #assign this information to a sequence class
-
+#start to find all of the motifs (use the regex that i wonderfully make above in the motif class)
+#LOOK AT REGEX DOCUMENTATION to get the start and end position for each instance --> span
+#assign that information to the motiffinder class 
