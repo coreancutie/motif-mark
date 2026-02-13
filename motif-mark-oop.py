@@ -71,3 +71,19 @@ class Sequence():
         #example of an exon 25bp long: [(25, 50)]
         #example of 2 exons in a sequence: [(10, 30), (80,95)]
         self.exon_list = exon_list
+
+class MotifFinder():
+    #this class is for finding all of the motifs in the sequence
+    def __init__(self, sequence):
+        #this is the sequence it came from
+        self.sequence = sequence
+        #this is an empty list to store all of the motif locations
+        self.motifs = []
+
+class Motif():
+    #this class finds all of the possible motifs
+    def __init__(self, motif):
+        #this is the motif
+        self.motif = motif
+
+    #make a function that gets all of the motif optioins
