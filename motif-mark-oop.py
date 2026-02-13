@@ -64,13 +64,15 @@ oneline_fasta(f, f"oneline_{f}")
 
 class Sequence():
     #this class is for each sequence in a FASTA
-    def __init__(self, length, exon_list):
+    def __init__(self, length, exon_list, header):
         #this is the overall total length of the sequence
         self.length = length
         #this is a list that holds start and end values for each exon in the sequence
         #example of an exon 25bp long: [(25, 50)]
         #example of 2 exons in a sequence: [(10, 30), (80,95)]
         self.exon_list = exon_list
+        #this is the header of the sequence from the FASTA
+        self.header = header
 
 class MotifFinder():
     #this class is for finding all of the motifs in the sequence
@@ -87,3 +89,16 @@ class Motif():
         self.motif = motif
 
     #make a function that gets all of the motif optioins
+
+
+#getting the information  -------------------------------------------------------------------------------
+
+#writing pseudocode
+
+#go through the FASTA one line at a time
+#get the header and save it for title use for the picture
+#make the sequence one line/one string with no new line characters
+#get the sequence length!
+#get the start and end position of all the exons as a list (make a function?)
+#assign this information to a sequence class
+
