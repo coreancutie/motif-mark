@@ -85,9 +85,19 @@ class MotifFinder():
 
 class Motif():
     #this class finds all of the possible motifs
-    def __init__(self, motif):
+    def __init__(self, motif:str):
         #this is the motif
         self.motif = motif
+        #this is the regex string used to search for the motif
+        self.regex = ''
+
+    def regex_motif_maker(self):
+        #looping though each character in a motif
+        for character in self.motif:
+            #making the character uppercase to search in dictionary
+            character = character.upper()
+            #adding the regex for that character to the motif regex string
+            self.regex += f"[{ambiguous[character]}]"
 
     #make a function that gets all of the motif optioins
     #RETURN THE REGEX EXPRESSION FOR THE MOTIF
@@ -96,20 +106,7 @@ class Motif():
 
 #getting the information --------------------------------------------------------------------------------
 
-#creating an empty list to store all the motifs in
-motifs:list = []
-
-#opening the motif file to read
-with open(m, "r") as motif_file:
-    #reading the file line by line
-    for line in motif_file:
-        #stripping the line of the new line character
-        line:str = line.strip("\n")
-        #adding the one motif from the file to the list of all motifs
-        motifs.append(line)
-
-
-#this is a dictionary with all of the ambuguous nucleotides
+#this is a dictionary with all of the ambiguous nucleotides
 ambiguous:dict = {'A': 'Aa', 
                   'C': 'Cc',
                   'G': 'Gg',
@@ -127,8 +124,24 @@ ambiguous:dict = {'A': 'Aa',
                   'V': 'AaCcGg',
                   'N': 'AaCcGgTt'}
 
-#go through each of the motifs and assign it to a motif class
-#the class will return the regex expression used to search for all possible options for that motif
+#creating an empty list to store all the motif classes
+motifs:list = []
+
+#opening the motif file to read
+with open(m, "r") as motif_file:
+    #reading the file line by line
+    for line in motif_file:
+        #stripping the line of the new line character
+        line:str = line.strip("\n")
+        #creating a new motif class
+        motif = Motif(line)
+        #calling the function in the Motif class to make the regex for the motif
+        motif.regex_motif_maker()
+        #adding the one motif class the list of all motifs
+        motifs.append(motif)
+
+#this is how to gee the motif and the regex for the motif from the motif class
+print(motifs[0].motif)
 
 #go through the FASTA one line at a time
 #get the header and save it for title use for the picture
