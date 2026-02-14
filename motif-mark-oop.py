@@ -3,6 +3,7 @@
 #adding imports
 import cairo
 import argparse
+import re
 
 #adding argparse statements
 def get_args():
@@ -107,10 +108,24 @@ with open(m, "r") as motif_file:
         #adding the one motif from the file to the list of all motifs
         motifs.append(line)
 
-print(motifs)
 
-#go through the motif txt file
-#make a list (maybe a set....?) of all the motifs (similar to making a set of the UMI in deduper)
+#this is a dictionary with all of the ambuguous nucleotides
+ambiguous:dict = {'A': 'Aa', 
+                  'C': 'Cc',
+                  'G': 'Gg',
+                  'T': 'Tt',
+                  'U': 'Uu',
+                  'W': 'AaTt',
+                  'S': 'CcGg',
+                  'M': 'AaCc',
+                  'K': 'GgTt',
+                  'R': 'AaGg',
+                  'Y': 'CcTt',
+                  'B': 'CcGgTt',
+                  'D': 'AaGgTt',
+                  'H': 'AaCcTt',
+                  'V': 'AaCcGg',
+                  'N': 'AaCcGgTt'}
 
 #go through each of the motifs and assign it to a motif class
 #the class will return the regex expression used to search for all possible options for that motif
