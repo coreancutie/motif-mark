@@ -93,9 +93,21 @@ class Motif():
     #y can be c or t
 
 
-#getting the information  -------------------------------------------------------------------------------
+#getting the information --------------------------------------------------------------------------------
 
-#writing pseudocode
+#creating an empty list to store all the motifs in
+motifs:list = []
+
+#opening the motif file to read
+with open(m, "r") as motif_file:
+    #reading the file line by line
+    for line in motif_file:
+        #stripping the line of the new line character
+        line:str = line.strip("\n")
+        #adding the one motif from the file to the list of all motifs
+        motifs.append(line)
+
+print(motifs)
 
 #go through the motif txt file
 #make a list (maybe a set....?) of all the motifs (similar to making a set of the UMI in deduper)
@@ -113,3 +125,5 @@ class Motif():
 #start to find all of the motifs (use the regex that i wonderfully make above in the motif class)
 #LOOK AT REGEX DOCUMENTATION to get the start and end position for each instance --> span
 #assign that information to the motiffinder class 
+
+#draw a beautiful visual :)
