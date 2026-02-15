@@ -99,10 +99,6 @@ class Motif():
             #adding the regex for that character to the motif regex string
             self.regex += f"[{ambiguous[character]}]"
 
-    #make a function that gets all of the motif optioins
-    #RETURN THE REGEX EXPRESSION FOR THE MOTIF
-    #y can be c or t
-
 
 #getting the information --------------------------------------------------------------------------------
 
@@ -144,6 +140,38 @@ with open(m, "r") as motif_file:
 print(motifs[0].motif)
 
 #go through the FASTA one line at a time
+#opening the reading FASTA file!
+with open(f, "r") as fasta:
+    #initalizing an empty string to hold the sequence
+    seq_line = ''
+    #initalizing an empty list to hold the exon start and end positions
+    exon_list = []
+
+    #reading through the lines in the file
+    for line in fasta:
+        #the line starts with ">" (a header)
+        if ">" in line:
+            #this is for the first line when the sequence is empty
+            if seq_line == '':
+                #assigning the header and stripping it of the new line character
+                header = line.strip("\n")
+            #this is for when we reach any other header and the sequence is not empty (one line)
+            else:
+                
+                #asign the class
+                sequence = Sequence(len(seq_line), exon_list, header)
+                #emptying the sequence holder
+                seq_line = ''
+                #assigning the next header
+                header = line.strip("\n")
+        #runs when at sequence line
+        else:
+            #adds the line to the string to make sequence one line
+            line = line.strip("\n")
+            seq_line += line
+    #the last case to write the last sequence
+    sequence = Sequence(len(seq_line), exon_list, header)
+
 #get the header and save it for title use for the picture
 #make the sequence one line/one string with no new line characters
 #get the sequence length!
