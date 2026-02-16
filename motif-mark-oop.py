@@ -26,6 +26,22 @@ m:str = args.m
 
 #defining the classes ------------------------------------------------------------------------------------
 
+class Motif():
+    #this class finds all of the possible motifs
+    def __init__(self, motif:str):
+        #this is the motif from the txt file
+        self.motif = motif
+        #this is the regex string used to search for the motif
+        self.regex = ''
+
+    def regex_motif_maker(self):
+        #looping though each character in a motif
+        for character in self.motif:
+            #making the character uppercase to search in dictionary
+            character = character.upper()
+            #adding the regex for that character to the motif regex string
+            self.regex += f"[{ambiguous[character]}]"
+
 class Sequence():
     #this class is for each sequence in a FASTA
     def __init__(self, sequence, length, exon_list, header):
@@ -62,24 +78,6 @@ class MotifFinder():
         #.span() makes a tuple of the start and end position of each motif and puts all the tuples in a list
         self.motif_locations = [motif.span() for motif in motifs]
 
-
-class Motif():
-    #this class finds all of the possible motifs
-    def __init__(self, motif:str):
-        #this is the motif from the txt file
-        self.motif = motif
-        #this is the regex string used to search for the motif
-        self.regex = ''
-
-    def regex_motif_maker(self):
-        #looping though each character in a motif
-        for character in self.motif:
-            #making the character uppercase to search in dictionary
-            character = character.upper()
-            #adding the regex for that character to the motif regex string
-            self.regex += f"[{ambiguous[character]}]"
-
-
 #getting the information --------------------------------------------------------------------------------
 
 #this is a dictionary with all of the ambiguous nucleotides
@@ -101,7 +99,7 @@ ambiguous:dict = {'A': 'Aa',
                   'N': 'AaCcGgTt'}
 
 #creating an empty list to store all the motif classes
-motifs:list = []
+motifs_list:list = []
 
 #opening the motif file to read
 with open(m, "r") as motif_file:
@@ -114,16 +112,15 @@ with open(m, "r") as motif_file:
         #calling the function in the Motif class to make the regex for the motif
         motif.regex_motif_maker()
         #adding the one motif class the list of all motifs
-        motifs.append(motif)
+        motifs_list.append(motif)
 
 #this is how to get the motif and the regex for the motif from the motif class
-# print(motifs[0].motif)
-
+# print(motifs_list[0].motif)
+# print(motifs_list[0].regex)
 
 #creating an empty list to store all the sequence classes
-sequences:list = []
+sequences_list:list = []
 
-#go through the FASTA one line at a time
 #opening the reading FASTA file!
 with open(f, "r") as fasta:
     #initalizing an empty string to hold the sequence
@@ -148,7 +145,7 @@ with open(f, "r") as fasta:
                 #assign the class
                 sequence = Sequence(seq_line, len(seq_line), exon_list, header)
                 #adding the one sequence class the list of all sequences
-                sequences.append(sequence)
+                sequences_list.append(sequence)
 
                 #emptying the sequence holder
                 seq_line = ''
@@ -165,24 +162,33 @@ with open(f, "r") as fasta:
     exon_list = [exon.span() for exon in exons]
     sequence = Sequence(seq_line, len(seq_line), exon_list, header)
     #adding the one sequence class the list of all sequences
-    sequences.append(sequence)
-
+    sequences_list.append(sequence)
 
 #this is how to get the info from the sequence class
-# print(sequences[0].sequence)
-# print(sequences[0].length)
-# print(sequences[0].exon_list)
-# print(sequences[0].header)
+# print(sequences_list[0].sequence)
+# print(sequences_list[0].length)
+# print(sequences_list[0].exon_list)
+# print(sequences_list[0].header)
+
+#creating an empty list to store all the motif finder classes
+motif_finders_list:list = []
 
 #looping though the sequences in the sequecnce class
-for sequence in sequences:
+for sequence in sequences_list:
     #looping through the motifs in the motif class
-    for motif in motifs:
-        print(motif.motif)
+    for motif in motifs_list:
         #adding to the motif finder class for each sequence and motif
         motif_finder = MotifFinder(sequence, motif)
         motif_finder.motif_finder(sequence.sequence, motif.regex)
+        
+        #appending the motif finder class to the list of all motif finders
+        motif_finders_list.append(motif_finder)
        
-        print(motif_finder.motif_locations)
+#this is how to get the info from the motif finder class
+# print(motif_finders_list[0].sequence.sequence)
+# print(motif_finders_list[0].motif.motif)
+# print(motif_finders_list[0].motif_locations)
+
+
 
 #draw a beautiful visual :)
