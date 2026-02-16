@@ -136,17 +136,18 @@ with open(m, "r") as motif_file:
         #adding the one motif class the list of all motifs
         motifs.append(motif)
 
-#this is how to gee the motif and the regex for the motif from the motif class
-print(motifs[0].motif)
+#this is how to get the motif and the regex for the motif from the motif class
+# print(motifs[0].motif)
+
+
+#creating an empty list to store all the sequence classes
+sequences:list = []
 
 #go through the FASTA one line at a time
 #opening the reading FASTA file!
 with open(f, "r") as fasta:
     #initalizing an empty string to hold the sequence
     seq_line = ''
-    #initalizing an empty list to hold the exon start and end positions
-    exon_list = []
-
     #reading through the lines in the file
     for line in fasta:
         #the line starts with ">" (a header)
@@ -157,9 +158,18 @@ with open(f, "r") as fasta:
                 header = line.strip("\n")
             #this is for when we reach any other header and the sequence is not empty (one line)
             else:
+                #find all the capital letters (exon) in the sequence
+                exons = re.finditer(r'[A-Z]+', seq_line)
+                #.span() makes a tuple of the start and end position of each exon 
+                #this puts all the tuples in a list
+                #this also resets everytime, so it only holds the exon positions for the current sequence
+                exon_list = [exon.span() for exon in exons]
                 
                 #asign the class
                 sequence = Sequence(len(seq_line), exon_list, header)
+                #adding the one sequence class the list of all sequences
+                sequences.append(sequence)
+
                 #emptying the sequence holder
                 seq_line = ''
                 #assigning the next header
@@ -169,15 +179,22 @@ with open(f, "r") as fasta:
             #adds the line to the string to make sequence one line
             line = line.strip("\n")
             seq_line += line
-    #the last case to write the last sequence
+    
+    #this is for the last sequence (since there is no header at the end)
+    exons = re.finditer(r'[A-Z]+', seq_line)
+    exon_list = [exon.span() for exon in exons]
     sequence = Sequence(len(seq_line), exon_list, header)
+    #adding the one sequence class the list of all sequences
+    sequences.append(sequence)
 
-#get the header and save it for title use for the picture
-#make the sequence one line/one string with no new line characters
-#get the sequence length!
-#get the start and end position of all the exons as a list (make a function?)
-    #used regex because uppercase wooo1
-#assign this information to a sequence class
+
+#this is how to get the info from the sequence class
+# print(sequences[0].length)
+# print(sequences[0].exon_list)
+# print(sequences[0].header)
+
+
+
 #start to find all of the motifs (use the regex that i wonderfully make above in the motif class)
 #LOOK AT REGEX DOCUMENTATION to get the start and end position for each instance --> span
 #assign that information to the motiffinder class 
