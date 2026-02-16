@@ -28,7 +28,9 @@ m:str = args.m
 
 class Sequence():
     #this class is for each sequence in a FASTA
-    def __init__(self, length, exon_list, header):
+    def __init__(self, sequence, length, exon_list, header):
+        #this is the actual sequence (string)
+        self.sequence = sequence
         #this is the overall total length of the sequence
         self.length = length
         #this is a list that holds start and end values for each exon in the sequence
@@ -40,16 +42,31 @@ class Sequence():
 
 class MotifFinder():
     #this class is for finding all of the motifs in the sequence
-    def __init__(self, sequence):
+    def __init__(self, sequence, motif):
         #this is the sequence it came from
         self.sequence = sequence
+        #this is the motif we are looking for
+        self.motif = motif
+
         #this is an empty list to store all of the motif locations
-        self.motifs = []
+        self.motif_locations = []
+
+
+    def motif_finder(self, sequence, regex):
+        '''Given the sequence and the regex for the motif, 
+        this function finds all of the motifs in the sequence as a tuple
+        and stores their locations in a list'''
+
+        #find all the motifs in the sequence
+        motifs = re.finditer(rf'{regex}', sequence)
+        #.span() makes a tuple of the start and end position of each motif and puts all the tuples in a list
+        self.motif_locations = [motif.span() for motif in motifs]
+
 
 class Motif():
     #this class finds all of the possible motifs
     def __init__(self, motif:str):
-        #this is the motif
+        #this is the motif from the txt file
         self.motif = motif
         #this is the regex string used to search for the motif
         self.regex = ''
@@ -128,8 +145,8 @@ with open(f, "r") as fasta:
                 #this also resets everytime, so it only holds the exon positions for the current sequence
                 exon_list = [exon.span() for exon in exons]
                 
-                #asign the class
-                sequence = Sequence(len(seq_line), exon_list, header)
+                #assign the class
+                sequence = Sequence(seq_line, len(seq_line), exon_list, header)
                 #adding the one sequence class the list of all sequences
                 sequences.append(sequence)
 
@@ -146,20 +163,26 @@ with open(f, "r") as fasta:
     #this is for the last sequence (since there is no header at the end)
     exons = re.finditer(r'[A-Z]+', seq_line)
     exon_list = [exon.span() for exon in exons]
-    sequence = Sequence(len(seq_line), exon_list, header)
+    sequence = Sequence(seq_line, len(seq_line), exon_list, header)
     #adding the one sequence class the list of all sequences
     sequences.append(sequence)
 
 
 #this is how to get the info from the sequence class
+# print(sequences[0].sequence)
 # print(sequences[0].length)
 # print(sequences[0].exon_list)
 # print(sequences[0].header)
 
-
-
-#start to find all of the motifs (use the regex that i wonderfully make above in the motif class)
-#LOOK AT REGEX DOCUMENTATION to get the start and end position for each instance --> .span()
-#assign that information to the motiffinder class 
+#looping though the sequences in the sequecnce class
+for sequence in sequences:
+    #looping through the motifs in the motif class
+    for motif in motifs:
+        print(motif.motif)
+        #adding to the motif finder class for each sequence and motif
+        motif_finder = MotifFinder(sequence, motif)
+        motif_finder.motif_finder(sequence.sequence, motif.regex)
+       
+        print(motif_finder.motif_locations)
 
 #draw a beautiful visual :)
