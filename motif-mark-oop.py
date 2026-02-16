@@ -24,43 +24,6 @@ f:str = args.f
 m:str = args.m
 
 
-def oneline_fasta(input_file:str, output_file:str):
-    '''takes a FASTA file with multiple sequence lines per record
-    and converts each record into 2 lines (header and one sequence)'''
-    #writting a new file named the output file
-    with open(output_file, "w") as f:
-        #opening the reading FASTA file!
-        with open(input_file, "r") as fh:
-            #initalizing an empty string to hold the sequences
-            seq_line = ''
-            #reading through the lines in the file
-            for line in fh:
-                #runs only when at a header
-                if ">" in line:
-                    #this is for the first line case when sequence is
-                    #empty but I need the first header
-                    if seq_line == '':
-                        #writting the first header
-                        f.write(line)
-                    #this is for when we reach the next header
-                    else:
-                        #writting the sequence!
-                        f.write(f"{seq_line}\n")
-                        #emptying the sequence holder
-                        seq_line = ''
-                        #writting the next header
-                        f.write(line)
-                #runs when at sequence line
-                else:
-                    #adds the line to the string to make sequence one line
-                    line = line.strip("\n")
-                    seq_line += line
-            #the last case to write the last sequence
-            f.write(seq_line)
-
-#making the input file FASTA have one line sequence
-oneline_fasta(f, f"oneline_{f}")
-
 #defining the classes ------------------------------------------------------------------------------------
 
 class Sequence():
@@ -196,7 +159,7 @@ with open(f, "r") as fasta:
 
 
 #start to find all of the motifs (use the regex that i wonderfully make above in the motif class)
-#LOOK AT REGEX DOCUMENTATION to get the start and end position for each instance --> span
+#LOOK AT REGEX DOCUMENTATION to get the start and end position for each instance --> .span()
 #assign that information to the motiffinder class 
 
 #draw a beautiful visual :)
