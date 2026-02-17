@@ -95,7 +95,7 @@ ambiguous:dict = {'A': 'Aa',
                   'D': 'AaGgTt',
                   'H': 'AaCcTt',
                   'V': 'AaCcGg',
-                  'N': 'AaCcGgTt'}
+                  'N': 'AaCcGgTtUuNn'}
 
 #creating an empty list to store all the motif classes
 motifs_list:list = []
@@ -189,7 +189,6 @@ for sequence in sequences_list:
 # print(motif_finders_list[0].motif_locations)
 
 
-
 #draw a beautiful visual --------------------------------------------------------------------------------
 
 #getting the longest sequence length
@@ -245,12 +244,15 @@ for sequence in sequences_list:
     #looping through the length of the exon list (this is incase there are multiple exons in a sequence)
     for i in range(len(sequence.exon_list)):
         #set color
-        context.set_source_rgb(0.5, 0.5, 1) #light purple
+        context.set_source_rgb(0, 0, 0) #black
         #(x_start, y_start, x_distance, y_distance)
         context.rectangle(sequence.exon_list[i][0] + 50, (seq_num * 100) - 20, 
                           sequence.exon_list[i][1] - sequence.exon_list[i][0], 20)
         #fill the rectangle
         context.fill()
+
+    #DRAWING THE MOTIF BOXES
+
 
 # surface.finish()
 #naming the output (the same as the input but without .fasta)
@@ -258,8 +260,6 @@ surface.write_to_png(f"{f.split('.')[0]}.png",)
 
 
 #pseudocode!!!!!!!
-# draw a box over the regon for the exon using the exon list in the sequence class
-    # make sure color of exon is the same color for all sequences
 # go though the motif finder class 
 # draw the boxes for the motifs using the motif locations 
     # make sure the motifs are a different colors to one another
@@ -269,6 +269,7 @@ surface.write_to_png(f"{f.split('.')[0]}.png",)
 
 
 #drawing a red horizontal line
+context.set_source_rgba(0.5, 0.5, 1) #light purple
 context.set_source_rgba(0.5, 0, 0) #red
 context.set_source_rgb(0, 0, 1) #blue
 context.set_source_rgb(0.5, 0.5, 1) #light purple
