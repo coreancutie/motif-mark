@@ -240,13 +240,19 @@ for sequence in sequences_list:
     context.line_to(sequence.length + 50, (seq_num * 100) - 10)
     context.stroke()
 
+    
     #DRAWING THE EXON BOXES
-    #drawing a rectangle
-    context.set_source_rgb(0.5, 0.5, 1) #light purple
-    context.rectangle(50,50,100,100)    #(x0,y0,x1,y1) (x_start, y_start, x_distance, y_distance)
-    context.fill()
-    surface.finish()
+    #looping through the length of the exon list (this is incase there are multiple exons in a sequence)
+    for i in range(len(sequence.exon_list)):
+        #set color
+        context.set_source_rgb(0.5, 0.5, 1) #light purple
+        #(x_start, y_start, x_distance, y_distance)
+        context.rectangle(sequence.exon_list[i][0] + 50, (seq_num * 100) - 20, 
+                          sequence.exon_list[i][1] - sequence.exon_list[i][0], 20)
+        #fill the rectangle
+        context.fill()
 
+# surface.finish()
 #naming the output (the same as the input but without .fasta)
 surface.write_to_png(f"{f.split('.')[0]}.png",)
 
