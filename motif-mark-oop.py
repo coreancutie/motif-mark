@@ -23,7 +23,6 @@ f:str = args.f
 #reassiging args.m filename as m
 m:str = args.m
 
-
 #defining the classes ------------------------------------------------------------------------------------
 
 class Motif():
@@ -192,3 +191,54 @@ for sequence in sequences_list:
 
 
 #draw a beautiful visual :)
+
+
+#assigning the width and height of the image
+
+#getting the longest sequence length
+max_seq_length = max([seq.length for seq in sequences_list])
+#getting the number of sequences 
+num_sequences = len(sequences_list)
+
+#assigning the width and height of the image + 100 (50 on each margen)
+width = max_seq_length + 100
+height = num_sequences + 100
+
+#making the parameters (the size of the output) and naming the output
+surface = cairo.SVGSurface("pycairo_basics.svg", width, height)
+#making the content onto the surface
+context = cairo.Context(surface)
+
+# for each sequence in the sequence class
+# write out the header 
+# draw a line for the sequence that is the length starting at 50 ending on len + 50 (for the margins)
+    # make sure the line for all sequences are the same
+# draw a box over the regon for the exon using the exon list in the sequence class
+    # make sure color of exon is the same color for all sequences
+# go though the motif finder class 
+# draw the boxes for the motifs using the motif locations 
+    # make sure the motifs are a different colors to one another
+    # could do this by randomly generating colors????
+    # make a list of rgb color values and assign each motif a color from the list????
+#make a legend for the motifs and their colors :)
+
+
+#drawing a red horizontal line
+context.set_line_width(5)
+context.set_source_rgba(0.5, 0, 0) #red
+context.move_to(50,25)
+context.line_to(150,25)
+context.stroke()
+
+#drawing a blue vertical line
+context.set_line_width(5)
+context.set_source_rgb(0, 0, 1) #blue
+context.move_to(175,50)
+context.line_to(175,150)
+context.stroke()
+
+#drawing a rectangle
+context.set_source_rgb(0.5, 0.5, 1) #light purple
+context.rectangle(50,50,100,100)    #(x0,y0,x1,y1) (x_start, y_start, x_distance, y_distance)
+context.fill()
+surface.finish()
