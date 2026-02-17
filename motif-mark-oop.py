@@ -196,7 +196,7 @@ for sequence in sequences_list:
 max_seq_length = max([seq.length for seq in sequences_list])
 #getting the number of sequences 
 num_sequences = len(sequences_list)
-#assigning the width of the image + 100 (50 on each margen)
+#assigning the width of the image + 100 (50 on each margin)
 width = max_seq_length + 100
 #assigning the height of the image (each sequence gets 100 pixels and then 50 for each margin)
 height = num_sequences * 100 + 100
@@ -221,25 +221,37 @@ for sequence in sequences_list:
     #font 
     context.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
     #font size
-    context.set_font_size(15)
+    context.set_font_size(13)
     #font color
     context.set_source_rgb(0, 0, 0) #black
-    #position of text (starts at 50 from the left margen) (50 from the top margen going every 100 for each sequence)
+    #position of text (starts at 50 from the left margin) (50 from the top margin going every 100 for each sequence)
     context.move_to(50, (seq_num * 100) - 50)
     #writing the header of the sequence
     context.show_text(sequence.header)
 
-    
-    
+    #DRAWING THE SEQUENCE LINES
+    #line width
+    context.set_line_width(5)
+    #line color
+    context.set_source_rgba(0, 0, 0) #black
+    #position of line start
+    context.move_to(50, (seq_num * 100) - 10)
+    #position of line end
+    context.line_to(sequence.length + 50, (seq_num * 100) - 10)
+    context.stroke()
+
+    #DRAWING THE EXON BOXES
+    #drawing a rectangle
+    context.set_source_rgb(0.5, 0.5, 1) #light purple
+    context.rectangle(50,50,100,100)    #(x0,y0,x1,y1) (x_start, y_start, x_distance, y_distance)
+    context.fill()
+    surface.finish()
+
 #naming the output (the same as the input but without .fasta)
 surface.write_to_png(f"{f.split('.')[0]}.png",)
 
 
 #pseudocode!!!!!!!
-# for each sequence in the sequence class
-# write out the header 
-# draw a line for the sequence that is the length starting at 50 ending on len + 50 (for the margins)
-    # make sure the line for all sequences are the same
 # draw a box over the regon for the exon using the exon list in the sequence class
     # make sure color of exon is the same color for all sequences
 # go though the motif finder class 
@@ -251,21 +263,6 @@ surface.write_to_png(f"{f.split('.')[0]}.png",)
 
 
 #drawing a red horizontal line
-context.set_line_width(5)
 context.set_source_rgba(0.5, 0, 0) #red
-context.move_to(50,25)
-context.line_to(150,25)
-context.stroke()
-
-#drawing a blue vertical line
-context.set_line_width(5)
 context.set_source_rgb(0, 0, 1) #blue
-context.move_to(175,50)
-context.line_to(175,150)
-context.stroke()
-
-#drawing a rectangle
 context.set_source_rgb(0.5, 0.5, 1) #light purple
-context.rectangle(50,50,100,100)    #(x0,y0,x1,y1) (x_start, y_start, x_distance, y_distance)
-context.fill()
-surface.finish()
