@@ -190,25 +190,52 @@ for sequence in sequences_list:
 
 
 
-#draw a beautiful visual :)
-
-
-#assigning the width and height of the image
+#draw a beautiful visual --------------------------------------------------------------------------------
 
 #getting the longest sequence length
 max_seq_length = max([seq.length for seq in sequences_list])
 #getting the number of sequences 
 num_sequences = len(sequences_list)
-
-#assigning the width and height of the image + 100 (50 on each margen)
+#assigning the width of the image + 100 (50 on each margen)
 width = max_seq_length + 100
-height = num_sequences + 100
+#assigning the height of the image (each sequence gets 100 pixels and then 50 for each margin)
+height = num_sequences * 100 + 100
 
-#making the parameters (the size of the output) and naming the output
-surface = cairo.SVGSurface("pycairo_basics.svg", width, height)
-#making the content onto the surface
+#making the parameters (the size of the output) 
+surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
 context = cairo.Context(surface)
 
+#set color
+context.set_source_rgb(1, 1, 1) #white
+#paint the entire surface white
+context.paint()
+
+#initalizing a sequence number to keep track of which sequence I am on while drawing
+seq_num:int = 0
+
+for sequence in sequences_list:
+    #incrementing the sequence number 
+    seq_num += 1
+
+    #WRITING THE HEADER
+    #font 
+    context.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    #font size
+    context.set_font_size(15)
+    #font color
+    context.set_source_rgb(0, 0, 0) #black
+    #position of text (starts at 50 from the left margen) (50 from the top margen going every 100 for each sequence)
+    context.move_to(50, (seq_num * 100) - 50)
+    #writing the header of the sequence
+    context.show_text(sequence.header)
+
+    
+    
+#naming the output (the same as the input but without .fasta)
+surface.write_to_png(f"{f.split('.')[0]}.png",)
+
+
+#pseudocode!!!!!!!
 # for each sequence in the sequence class
 # write out the header 
 # draw a line for the sequence that is the length starting at 50 ending on len + 50 (for the margins)
