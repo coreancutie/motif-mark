@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
 #adding imports
+from random import random
+
+from random import random
+
 import cairo
 import argparse
 import re
@@ -27,9 +31,11 @@ m:str = args.m
 
 class Motif():
     #this class finds all of the possible motifs
-    def __init__(self, motif:str):
+    def __init__(self, motif:str, color:tuple):
         #this is the motif from the txt file
         self.motif = motif
+        #this is the color of the motif in normalized RGB values from the motif_colors list
+        self.color = color
         #this is the regex string used to search for the motif
         self.regex = ''
 
@@ -97,17 +103,34 @@ ambiguous:dict = {'A': 'Aa',
                   'V': 'AaCcGg',
                   'N': 'AaCcGgTtUuNn'}
 
+#this is a list holding normalized rgb values for max 10 different motifs
+motif_colors:list = [(0.678, 0.847, 0.902), #light blue 
+                     (0.314, 0.784, 0.471), #emerland green 
+                     (0.545, 0.0, 0.545), #magenta
+                     (0.890, 0.325, 0.212), #terracotta
+                     (0.188, 0.361, 0.871), #royal blue
+                     (0.4, 0.0, 0.2), #burgandy
+                     (1.000, 0.651, 0.788), #light pink
+                     (0.929, 0.910, 0.816), #beige
+                     (0.035, 0.424, 0.424), #teal (peacock blue)
+                     (1.0, 0.8078, 0.1059) #mustard yellow
+                     ]
+
 #creating an empty list to store all the motif classes
 motifs_list:list = []
 
 #opening the motif file to read
 with open(m, "r") as motif_file:
+    #initalizing the line number (for the color assignment)
+    line_num = 0
     #reading the file line by line
     for line in motif_file:
+        #incrementing the line number
+        line_num += 1
         #stripping the line of the new line character
         line:str = line.strip("\n")
-        #creating a new motif class
-        motif = Motif(line)
+        #creating a new motif class)
+        motif = Motif(line, motif_colors[line_num])
         #calling the function in the Motif class to make the regex for the motif
         motif.regex_motif_maker()
         #adding the one motif class the list of all motifs
@@ -201,7 +224,8 @@ width = max_seq_length + 100
 height = num_sequences * 100 + 100
 
 #making the parameters (the size of the output) 
-surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+'''surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)'''
+surface = cairo.SVGSurface(f"{f.split('.')[0]}.svg", width, height)
 context = cairo.Context(surface)
 
 #set color
@@ -212,7 +236,7 @@ context.paint()
 #initalizing a sequence number to keep track of which sequence I am on while drawing
 seq_num:int = 0
 
-for sequence in sequences_list:
+for current_sequence in sequences_list:
     #incrementing the sequence number 
     seq_num += 1
 
@@ -226,37 +250,48 @@ for sequence in sequences_list:
     #position of text (starts at 50 from the left margin) (50 from the top margin going every 100 for each sequence)
     context.move_to(50, (seq_num * 100) - 50)
     #writing the header of the sequence
-    context.show_text(sequence.header)
+    context.show_text(current_sequence.header)
 
     #DRAWING THE SEQUENCE LINES
     #line width
-    context.set_line_width(5)
+    context.set_line_width(3)
     #line color
     context.set_source_rgba(0, 0, 0) #black
     #position of line start
     context.move_to(50, (seq_num * 100) - 10)
     #position of line end
-    context.line_to(sequence.length + 50, (seq_num * 100) - 10)
+    context.line_to(current_sequence.length + 50, (seq_num * 100) - 10)
     context.stroke()
 
     
     #DRAWING THE EXON BOXES
     #looping through the length of the exon list (this is incase there are multiple exons in a sequence)
-    for i in range(len(sequence.exon_list)):
+    for i in range(len(current_sequence.exon_list)):
         #set color
         context.set_source_rgb(0, 0, 0) #black
         #(x_start, y_start, x_distance, y_distance)
-        context.rectangle(sequence.exon_list[i][0] + 50, (seq_num * 100) - 20, 
-                          sequence.exon_list[i][1] - sequence.exon_list[i][0], 20)
+        context.rectangle(current_sequence.exon_list[i][0] + 50, (seq_num * 100) - 20, 
+                          current_sequence.exon_list[i][1] - current_sequence.exon_list[i][0], 20)
         #fill the rectangle
         context.fill()
 
     #DRAWING THE MOTIF BOXES
+    #looping though the length of the motif finder class (looping through length because there are multiple matched motifs in a sequence)
+    for i in range(len(motif_finders_list)):
+        #getting the motif finder class for the current sequence
+        if motif_finders_list[i].sequence == current_sequence:
+            #looping through the length of the motif finder class for the current sequence
+            for j in range(len(motif_finders_list[i].motif_locations)):
+                print(motif_finders_list[i].motif_locations[j])
+                print(motif_finders_list[i].motif.motif)
+                break
+
+        
 
 
 # surface.finish()
 #naming the output (the same as the input but without .fasta)
-surface.write_to_png(f"{f.split('.')[0]}.png",)
+'''surface.write_to_png(f"{f.split('.')[0]}.png",)'''
 
 
 #pseudocode!!!!!!!
