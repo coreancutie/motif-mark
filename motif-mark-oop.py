@@ -79,9 +79,10 @@ class MotifFinder():
         and stores their locations in a list'''
 
         #find all the motifs in the sequence
-        motifs = re.finditer(rf'{regex}', sequence)
+        #the regex uses a positive lookahead assertion (?=) that it can find overlapping motifs
+        motifs = re.finditer(rf'(?=({regex}))', sequence)
         #.span() makes a tuple of the start and end position of each motif and puts all the tuples in a list
-        self.motif_locations = [motif.span() for motif in motifs]
+        self.motif_locations = [motif.span(1) for motif in motifs]
 
 #getting the information --------------------------------------------------------------------------------
 
@@ -138,6 +139,7 @@ with open(m, "r") as motif_file:
 
 #this is how to get the motif and the regex for the motif from the motif class
 # print(motifs_list[0].motif)
+# print(motifs_list[0].color)
 # print(motifs_list[0].regex)
 
 #creating an empty list to store all the sequence classes
@@ -282,11 +284,13 @@ for current_sequence in sequences_list:
         if motif_finders_list[i].sequence == current_sequence:
             #looping through the length of the motif finder class for the current sequence
             for j in range(len(motif_finders_list[i].motif_locations)):
-                print(motif_finders_list[i].motif_locations[j])
-                print(motif_finders_list[i].motif.motif)
-                break
-
-        
+                #setting the color of the motif box to what it is assigned to in the class
+                context.set_source_rgb(motif_finders_list[i].motif.color[0], motif_finders_list[i].motif.color[1], motif_finders_list[i].motif.color[2])
+                #(x_start, y_start, x_distance, y_distance)
+                context.rectangle(motif_finders_list[i].motif_locations[j][0] + 50, (seq_num * 100) - 20, 
+                                  motif_finders_list[i].motif_locations[j][1] - motif_finders_list[i].motif_locations[j][0], 20)
+                #fill the rectangle
+                context.fill()
 
 
 # surface.finish()
@@ -295,16 +299,4 @@ for current_sequence in sequences_list:
 
 
 #pseudocode!!!!!!!
-# go though the motif finder class 
-# draw the boxes for the motifs using the motif locations 
-    # make sure the motifs are a different colors to one another
-    # could do this by randomly generating colors????
-    # make a list of rgb color values and assign each motif a color from the list????
 #make a legend for the motifs and their colors :)
-
-
-#drawing a red horizontal line
-context.set_source_rgba(0.5, 0.5, 1) #light purple
-context.set_source_rgba(0.5, 0, 0) #red
-context.set_source_rgb(0, 0, 1) #blue
-context.set_source_rgb(0.5, 0.5, 1) #light purple
