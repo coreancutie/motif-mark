@@ -220,10 +220,12 @@ for sequence in sequences_list:
 max_seq_length = max([seq.length for seq in sequences_list])
 #getting the number of sequences 
 num_sequences = len(sequences_list)
+#getting the number of motifs
+num_motifs = len(motifs_list)
 #assigning the width of the image + 100 (50 on each margin)
 width = max_seq_length + 100
-#assigning the height of the image (each sequence gets 100 pixels and then 50 for each margin)
-height = num_sequences * 100 + 100
+#assigning the height of the image (each sequence gets 100 pixels and then 50 for each margin, and 20 for each motif in the legend)
+height = (num_sequences * 100) + 100 + (num_motifs * 20)
 
 #making the parameters (the size of the output) 
 '''surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)'''
@@ -293,10 +295,39 @@ for current_sequence in sequences_list:
                 context.fill()
 
 
+#initalizing a motif number to keep track of which motif I am on while drawing the legend
+motif_num:int = 0
+#DRAWING THE LEGEND 
+for motif in motifs_list:
+    #font
+    context.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    #font size
+    context.set_font_size(13)
+    #font color
+    context.set_source_rgb(0, 0, 0) #black
+    #position of text (starts at 50 from the left margin + 20 for the color box) (50 down from the last sequence)
+    context.move_to(50 + 20, (((num_sequences * 100) + 50) + (motif_num * 20)))
+    #writing the motif
+    context.show_text(motif.motif)
+
+    #setting the color 
+    context.set_source_rgb(motif.color[0], motif.color[1], motif.color[2])
+    #(x_start, y_start, x_distance, y_distance)
+    context.rectangle(50, (((num_sequences * 100) + 50) + (motif_num * 20)) - 15, 17, 17)
+    #fill the rectangle
+    context.fill()
+
+    #incrementing the motif number
+    motif_num += 1
+
+    
+
+
 # surface.finish()
 #naming the output (the same as the input but without .fasta)
 '''surface.write_to_png(f"{f.split('.')[0]}.png",)'''
 
 
 #pseudocode!!!!!!!
+#figure out how to account for overlaping motifs :(
 #make a legend for the motifs and their colors :)
