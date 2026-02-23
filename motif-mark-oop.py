@@ -244,7 +244,7 @@ for current_sequence in sequences_list:
     #incrementing the sequence number 
     seq_num += 1
 
-    #WRITING THE HEADER
+    #----------------WRITING THE HEADER----------------
     #font 
     context.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
     #font size
@@ -256,7 +256,7 @@ for current_sequence in sequences_list:
     #writing the header of the sequence
     context.show_text(current_sequence.header)
 
-    #DRAWING THE SEQUENCE LINES
+    #----------------DRAWING THE SEQUENCE LINES----------------
     #line width
     context.set_line_width(3)
     #line color
@@ -268,7 +268,7 @@ for current_sequence in sequences_list:
     context.stroke()
 
     
-    #DRAWING THE EXON BOXES
+    #----------------DRAWING THE EXON BOXES----------------
     #looping through the length of the exon list (this is incase there are multiple exons in a sequence)
     for i in range(len(current_sequence.exon_list)):
         #set color
@@ -279,7 +279,7 @@ for current_sequence in sequences_list:
         #fill the rectangle
         context.fill()
 
-    #DRAWING THE MOTIF BOXES
+    #----------------DRAWING THE MOTIF BOXES----------------
     #looping though the length of the motif finder class (looping through length because there are multiple matched motifs in a sequence)
     for i in range(len(motif_finders_list)):
         #getting the motif finder class for the current sequence
@@ -294,9 +294,51 @@ for current_sequence in sequences_list:
                 #fill the rectangle
                 context.fill()
 
+#----------------WRITING THE LEGEND----------------
+#---------------- writing the intron legend ----------------
+#setting the font
+context.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+#font size
+context.set_font_size(13)
+#font color
+context.set_source_rgb(0, 0, 0) #black
+#position of text (starts at 50 from the left margin + 30 for the color box) (50 down from the last sequence)
+context.move_to(50 + 30, (num_sequences * 100) + 50)
+#writing the motif
+context.show_text("intron")
 
-#initalizing a motif number to keep track of which motif I am on while drawing the legend
-motif_num:int = 0
+#setting the color 
+context.set_source_rgb(0, 0, 0) #black
+#position of line start
+context.move_to(50, (num_sequences * 100) + 45)
+#position of line end
+context.line_to(50 + 17, (num_sequences * 100) + 45)
+#draw the line
+context.stroke()
+
+#---------------- writing the exon legend ----------------
+#setting the font
+context.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+#font size
+context.set_font_size(13)
+#font color
+context.set_source_rgb(0, 0, 0) #black
+#position of text (starts at 50 from the left margin + 30 for the color box) (50 down from the last sequence)
+context.move_to(50 + 30, (((num_sequences * 100) + 50) + 20))
+#writing the motif
+context.show_text("exon")
+
+#setting the color 
+context.set_source_rgb(0, 0, 0) #black
+#(x_start, y_start, x_distance, y_distance)
+context.rectangle(50, (((num_sequences * 100) + 50) + 20) - 15, 17, 17)
+#fill the rectangle
+context.fill()
+
+#----------------writing the motif legend----------------
+#initalizing a motif number to keep track of which motif I am on while drawing the legend 
+#(starts at 2 because the legend starts with intron and exon)
+motif_num:int = 2
 #DRAWING THE LEGEND 
 for motif in motifs_list:
     #font
@@ -304,9 +346,9 @@ for motif in motifs_list:
     #font size
     context.set_font_size(13)
     #font color
-    context.set_source_rgb(0, 0, 0) #black
-    #position of text (starts at 50 from the left margin + 20 for the color box) (50 down from the last sequence)
-    context.move_to(50 + 20, (((num_sequences * 100) + 50) + (motif_num * 20)))
+    context.set_source_rgb(motif.color[0], motif.color[1], motif.color[2]) #black
+    #position of text (starts at 50 from the left margin + 30 for the color box) (50 down from the last sequence)
+    context.move_to(50 + 30, (((num_sequences * 100) + 50) + (motif_num * 20)))
     #writing the motif
     context.show_text(motif.motif)
 
@@ -319,8 +361,6 @@ for motif in motifs_list:
 
     #incrementing the motif number
     motif_num += 1
-
-    
 
 
 # surface.finish()
