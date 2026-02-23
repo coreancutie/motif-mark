@@ -72,6 +72,9 @@ class MotifFinder():
         #this is an empty list to store all of the motif locations
         self.motif_locations = []
 
+        #this is an empty list to store all of the overlapping motif locations
+        self.overlapping_motif_locations = []
+
 
     def motif_finder(self, sequence, regex):
         '''Given the sequence and the regex for the motif, 
@@ -83,6 +86,19 @@ class MotifFinder():
         motifs = re.finditer(rf'(?=({regex}))', sequence)
         #.span() makes a tuple of the start and end position of each motif and puts all the tuples in a list
         self.motif_locations = [motif.span(1) for motif in motifs]
+
+        #if the length of the list is larger than 1, I need to check for overlapping motifs
+        if len(self.motif_locations) > 1:
+            #loop through length of the motif locations - 1 (-1 because I am comparing the current motif to the next one)
+            for i in range(len(self.motif_locations) - 1):
+                #if the end of the current motif is greater than the start of the next motif, they are overlapping
+                if self.motif_locations[i][1] > self.motif_locations[i + 1][0]:
+                    #make sure that motif location isn't already in the list
+                    if self.motif_locations[i] not in self.overlapping_motif_locations:
+                        #add the current motif location to the list of overlapping motifs
+                        self.overlapping_motif_locations.append(self.motif_locations[i])
+                    #add the next motif location to the list of overlapping motifs
+                    self.overlapping_motif_locations.append(self.motif_locations[i + 1])
 
 #getting the information --------------------------------------------------------------------------------
 
@@ -210,11 +226,11 @@ for sequence in sequences_list:
        
 #this is how to get the info from the motif finder class
 # print(motif_finders_list[0].sequence.sequence)
-# print(motif_finders_list[0].motif.motif)
-# print(motif_finders_list[0].motif_locations)
+# print(motif_finders_list[3].motif.motif)
+# print(motif_finders_list[3].motif_locations)
+# print(motif_finders_list[3].overlapping_motif_locations)
 
-
-#draw a beautiful visual --------------------------------------------------------------------------------
+#drawing the visual ------------------------------------------------------------------------------------------
 
 #getting the longest sequence length
 max_seq_length = max([seq.length for seq in sequences_list])
@@ -289,13 +305,13 @@ for current_sequence in sequences_list:
                 #setting the color of the motif box to what it is assigned to in the class
                 context.set_source_rgb(motif_finders_list[i].motif.color[0], motif_finders_list[i].motif.color[1], motif_finders_list[i].motif.color[2])
                 #(x_start, y_start, x_distance, y_distance)
-                context.rectangle(motif_finders_list[i].motif_locations[j][0] + 50, (seq_num * 100) - 20, 
-                                  motif_finders_list[i].motif_locations[j][1] - motif_finders_list[i].motif_locations[j][0], 20)
+                context.rectangle(motif_finders_list[i].motif_locations[j][0] + 50, (seq_num * 100) - 18, 
+                                  motif_finders_list[i].motif_locations[j][1] - motif_finders_list[i].motif_locations[j][0], 16)
                 #fill the rectangle
                 context.fill()
-
+        
 #----------------WRITING THE LEGEND----------------
-#---------------- writing the intron legend ----------------
+#----------------writing the intron legend----------------
 #setting the font
 context.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 #font size
@@ -316,7 +332,7 @@ context.line_to(50 + 17, (num_sequences * 100) + 45)
 #draw the line
 context.stroke()
 
-#---------------- writing the exon legend ----------------
+#----------------writing the exon legend----------------
 #setting the font
 context.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 #font size
@@ -366,8 +382,3 @@ for motif in motifs_list:
 # surface.finish()
 #naming the output (the same as the input but without .fasta)
 '''surface.write_to_png(f"{f.split('.')[0]}.png",)'''
-
-
-#pseudocode!!!!!!!
-#figure out how to account for overlaping motifs :(
-#make a legend for the motifs and their colors :)
