@@ -5,6 +5,10 @@ This script identifies motifs in pre-mRNA and outputs a visual (png) of the sequ
 
 Each motif are color coded and marked along the sequence. The script will identify motifs that overlap intron and exons, and in the case of ambiguaty (such a motif NNN that will find AAA, TTT, GGG, and CCC) will identify overlaping regions indicated by the tickmarks under the sequence. The script utalizes object oriented programing (OOP). 
 
+Here is an example of an. .svg output from the two inputs [Figure_1.fasta](./test/Figure_1.fasta) and [Fig_1_motifs.txt](./test/Fig_1_motifs.txt) which are both in the [test folder](./test/) from this repository. 
+
+![Figure from example test](./test/Figure_1.svg)
+
 ## Inputs
 
 1.  A FATSA file
@@ -30,6 +34,7 @@ Each motif are color coded and marked along the sequence. The script will identi
     - The motif "ACT" will be found in both exon (uppercase) and introns (lowercase)
 - The script can account for motifs that have ambiguous nucleotides (all ambiguous nucleotides can be found [here](https://en.wikipedia.org/wiki/Nucleic_acid_notation))
     - The motif `YGCY` (where the `Y` is either a `C` or a `T`) will find `CGCC`, `TGCT` `TGCC`, and `CGCT` in the sequence. 
+    - In this script, `U` matches both with `U` and `T`
 
 ## Potential Improvements
 - Could output some stats along with the figure
