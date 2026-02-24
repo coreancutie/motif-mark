@@ -34,9 +34,18 @@ Here is an example of an. .svg output from the two inputs [Figure_1.fasta](./tes
     - The motif "ACT" will be found in both exon (uppercase) and introns (lowercase)
 - The script can account for motifs that have ambiguous nucleotides (all ambiguous nucleotides can be found [here](https://en.wikipedia.org/wiki/Nucleic_acid_notation))
     - The motif `YGCY` (where the `Y` is either a `C` or a `T`) will find `CGCC`, `TGCT` `TGCC`, and `CGCT` in the sequence. 
-    - In this script, `U` matches both with `U` and `T`
+    - In this script, since it works for both DNA and RNA inputs
+        - `U` matches both with `U` and `T`
+        - `T` matches both with `T` and `U`
 
 ## Potential Improvements
 - Could output some stats along with the figure
     - how many motifs were in each sequence 
     - how many of each motif were found throughout the entire FASTA file
+
+## Running the Script
+`conda create -n my_pycairo pycairo`
+
+`conda activate my_pycairo`
+
+If pwd is `motif-mark/test`, run `../motif-mark-oop.py -f Figure_1.fasta -m Fig_1_motifs.txt`
