@@ -3,8 +3,6 @@
 #adding imports
 from random import random
 
-from random import random
-
 import cairo
 import argparse
 import re
@@ -107,7 +105,7 @@ ambiguous:dict = {'A': 'Aa',
                   'C': 'Cc',
                   'G': 'Gg',
                   'T': 'Tt',
-                  'U': 'Uu',
+                  'U': 'TtUu',
                   'W': 'AaTt',
                   'S': 'CcGg',
                   'M': 'AaCc',
@@ -121,16 +119,16 @@ ambiguous:dict = {'A': 'Aa',
                   'N': 'AaCcGgTtUuNn'}
 
 #this is a list holding normalized rgb values for max 10 different motifs
-motif_colors:list = [(0.678, 0.847, 0.902), #light blue 
+motif_colors:list = [(0.188, 0.361, 0.871), #royal blue
                      (0.314, 0.784, 0.471), #emerland green 
                      (0.545, 0.0, 0.545), #magenta
-                     (0.890, 0.325, 0.212), #terracotta
-                     (0.188, 0.361, 0.871), #royal blue
-                     (0.4, 0.0, 0.2), #burgandy
+                     (0.180, 0.435, 0.251), #forest green
+                     (0.427, 0.506, 0.588), #steel blue
                      (1.000, 0.651, 0.788), #light pink
-                     (0.929, 0.910, 0.816), #beige
                      (0.035, 0.424, 0.424), #teal (peacock blue)
-                     (1.0, 0.8078, 0.1059) #mustard yellow
+                     (0.890, 0.325, 0.212), #terracotta
+                     (1.0, 0.8078, 0.1059), #mustard yellow
+                     (0.678, 0.847, 0.902), #light blue 
                      ]
 
 #creating an empty list to store all the motif classes
@@ -142,8 +140,6 @@ with open(m, "r") as motif_file:
     line_num = 0
     #reading the file line by line
     for line in motif_file:
-        #incrementing the line number
-        line_num += 1
         #stripping the line of the new line character
         line:str = line.strip("\n")
         #creating a new motif class)
@@ -152,6 +148,8 @@ with open(m, "r") as motif_file:
         motif.regex_motif_maker()
         #adding the one motif class the list of all motifs
         motifs_list.append(motif)
+        #incrementing the line number
+        line_num += 1
 
 #this is how to get the motif and the regex for the motif from the motif class
 # print(motifs_list[0].motif)
@@ -300,7 +298,7 @@ for current_sequence in sequences_list:
     for i in range(len(motif_finders_list)):
         #getting the motif finder class for the current sequence
         if motif_finders_list[i].sequence == current_sequence:
-            #looping through the length of the motif finder class for the current sequence
+            #looping through the length of the locations in the motif finder class for the current sequence
             for j in range(len(motif_finders_list[i].motif_locations)):
                 #setting the color of the motif box to what it is assigned to in the class
                 context.set_source_rgb(motif_finders_list[i].motif.color[0], motif_finders_list[i].motif.color[1], motif_finders_list[i].motif.color[2])
@@ -309,6 +307,43 @@ for current_sequence in sequences_list:
                                   motif_finders_list[i].motif_locations[j][1] - motif_finders_list[i].motif_locations[j][0], 16)
                 #fill the rectangle
                 context.fill()
+            #----------------DRAWING THE OVERLAP MOTIF LINES----------------
+            #setting the gap between the sequence and the overlap line
+            gap = 0 
+            for k in range(len(motif_finders_list[i].overlapping_motif_locations)):
+                # print(current_sequence.header)
+                # print(motif_finders_list[i].overlapping_motif_locations[k])
+                # print(motif_finders_list[i].overlapping_motif_locations[k-1])
+                
+                #if the start of the current motif is less than the end of the prevous motif
+                if motif_finders_list[i].overlapping_motif_locations[k][0] <= motif_finders_list[i].overlapping_motif_locations[k-1][1]:
+                    #line width
+                    context.set_line_width(1)
+                    #setting the color of the motif box to what it is assigned to in the class
+                    context.set_source_rgb(motif_finders_list[i].motif.color[0], motif_finders_list[i].motif.color[1], motif_finders_list[i].motif.color[2])
+                    #position of line start
+                    context.move_to(motif_finders_list[i].overlapping_motif_locations[k][0] + 50, (seq_num * 100) + (5 + gap))
+                    #position of line end
+                    context.line_to(motif_finders_list[i].overlapping_motif_locations[k][1] + 50, (seq_num * 100) + (5 + gap))
+                    context.stroke()
+                    #adding to the gap so the next line is lower and doesn't overlap with the previous line
+                    gap += 2
+                #if the start of the current motif is greater than the end of the prevous motif, rest the gap
+                if motif_finders_list[i].overlapping_motif_locations[k][0] >= motif_finders_list[i].overlapping_motif_locations[k-1][1]:
+                    #reset the gap
+                    gap = 0
+                    #line width
+                    context.set_line_width(1)
+                    #setting the color of the motif box to what it is assigned to in the class
+                    context.set_source_rgb(motif_finders_list[i].motif.color[0], motif_finders_list[i].motif.color[1], motif_finders_list[i].motif.color[2])
+                    #position of line start
+                    context.move_to(motif_finders_list[i].overlapping_motif_locations[k][0] + 50, (seq_num * 100) + (5 + gap))
+                    #position of line end
+                    context.line_to(motif_finders_list[i].overlapping_motif_locations[k][1] + 50, (seq_num * 100) + (5 + gap))
+                    context.stroke()
+                    #adding to the gap so the next line is lower and doesn't overlap with the previous line
+                    gap += 2
+            
         
 #----------------WRITING THE LEGEND----------------
 #----------------writing the intron legend----------------
@@ -323,6 +358,8 @@ context.move_to(50 + 30, (num_sequences * 100) + 50)
 #writing the motif
 context.show_text("intron")
 
+#line width
+context.set_line_width(3)
 #setting the color 
 context.set_source_rgb(0, 0, 0) #black
 #position of line start
