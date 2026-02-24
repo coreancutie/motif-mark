@@ -242,8 +242,8 @@ width = max_seq_length + 100
 height = (num_sequences * 100) + 100 + (num_motifs * 20)
 
 #making the parameters (the size of the output) 
-'''surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)'''
-surface = cairo.SVGSurface(f"{f.split('.')[0]}.svg", width, height)
+surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+'''surface = cairo.SVGSurface(f"{f.split('.')[0]}.svg", width, height)'''
 context = cairo.Context(surface)
 
 #set color
@@ -416,6 +416,6 @@ for motif in motifs_list:
     motif_num += 1
 
 
-# surface.finish()
 #naming the output (the same as the input but without .fasta)
-'''surface.write_to_png(f"{f.split('.')[0]}.png",)'''
+surface.write_to_png(f"{f.split('.')[0]}.png",)
+surface.finish()
